@@ -1,4 +1,9 @@
-define(["Balloons", "Bullets", "Platforms", "Player"], function(Balloons, Bullets, Platforms, Player) {
+define([
+    "Balloons",
+    "Bullets",
+    "Platforms",
+    "Player"
+], function(Balloons, Bullets, Platforms, Player) {
     function Main(game) {
 
         this.score = 0;

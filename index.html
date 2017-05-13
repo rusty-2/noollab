@@ -16,7 +16,7 @@
 
     <script type="text/javascript">
 		requirejs.config({
-		    baseUrl: 'js',
+		    baseUrl: 'js'
 		});
     requirejs(["states/boot", "states/preload", "states/menu", "states/main"], function(Boot, Preload, Menu, Main) {
     				//Create a new game that fills the screen
@@ -32,7 +32,7 @@
 
     				//Start the first state
     				game.state.start("Boot");
-    		})
+    		});
 
     </script>
 
