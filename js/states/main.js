@@ -5,11 +5,59 @@ define([
     "Player"
 ], function(Balloons, Bullets, Platforms, Player) {
     function Main(game) {
-
         this.score = 0;
         this.bulletTime = 0;
+    }
 
-    };
+    function hitBalloon(bullet, balloon) {
+        // Removes the bullet from the screen
+        bullet.kill();
+
+        if (balloon.shrinkable()) {
+            var firstNewBalloon = this.balloons.createRelativeTo(balloon);
+            var secondNewBalloon = this.balloons.createRelativeTo(balloon);
+            var newLevel = --balloon.level;
+            firstNewBalloon.setLevel(newLevel);
+            secondNewBalloon.setLevel(newLevel);
+        }
+        // Removes the balloon from the screen
+        balloon.kill();
+
+        //  Add and update the score
+        this.score += 10;
+        scoreText.text = 'Score: ' + this.score;
+    }
+
+    function fireBullet() {
+        if (game.time.now > this.bulletTime) {
+            bullet = this.bullets.getFirstExists(false);
+
+            if (bullet) {
+                bullet.reset(this.player.xPos() + 6, this.player.yPos() - 8);
+                bullet.body.velocity.y = -300;
+                this.bulletTime = game.time.now + 250;
+            }
+        }
+    }
+
+    function endGame() {
+        scoreText.text = '';
+
+        var finalScoreText = game.add.text(game.world.width / 2 - 100, game.world.height / 2,
+            'Final score: ' + this.score, {
+                fontSize: '32px',
+                fill: '#000'
+            });
+        var restartText = game.add.text(game.world.width / 2 - 275, game.world.height - 55,
+            'Press \'Space\' to get back to menu screen');
+
+        this.spaceKey.onDown.addOnce(backToMenu, this);
+    }
+
+    function backToMenu() {
+        this.score = 0;
+        this.game.state.start("Menu");
+    }
 
     Main.prototype = {
 
@@ -46,7 +94,7 @@ define([
             game.physics.arcade.collide(this.balloons, this.platforms);
 
             if (this.player.collideWith(this.balloons) || !this.balloons.anyAlive()) {
-                this.endGame();
+                endGame.call(this);
             }
 
             var cursors = game.input.keyboard.createCursorKeys();
@@ -65,70 +113,11 @@ define([
             }
 
             if (this.spaceKey.isDown) {
-                this.fireBullet();
+                fireBullet.call(this);
             }
 
-            game.physics.arcade.overlap(this.bullets, this.balloons, this.hitBalloon, null, this);
-        },
-
-        hitBalloon: function(bullet, balloon) {
-
-            // Removes the balloon from the screen
-            bullet.kill();
-
-            if (balloon.level > 0) {
-
-                var firstNewBalloon = this.balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
-                    balloon.body.y - Math.random() * 25 + Math.random() * 25);
-                var secondNewBalloon = this.balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
-                    balloon.body.y - Math.random() * 25 + Math.random() * 25);
-                var newLevel = --balloon.level;
-                firstNewBalloon.setLevel(newLevel);
-                secondNewBalloon.setLevel(newLevel);
-            }
-
-            balloon.kill();
-
-            //  Add and update the score
-            this.score += 10;
-            scoreText.text = 'Score: ' + this.score;
-        },
-
-        fireBullet: function() {
-
-            if (game.time.now > this.bulletTime) {
-                bullet = this.bullets.getFirstExists(false);
-
-                if (bullet) {
-                    bullet.reset(this.player.xPos() + 6, this.player.yPos() - 8);
-                    bullet.body.velocity.y = -300;
-                    this.bulletTime = game.time.now + 250;
-                }
-            }
-        },
-
-
-
-        endGame: function() {
-            scoreText.text = '';
-
-            var finalScoreText = game.add.text(game.world.width / 2 - 100, game.world.height / 2,
-                'Final score: ' + this.score, {
-                    fontSize: '32px',
-                    fill: '#000'
-                });
-            var restartText = game.add.text(game.world.width / 2 - 275, game.world.height - 55,
-                'Press \'Space\' to get back to menu screen');
-
-            this.spaceKey.onDown.addOnce(this.backToMenu, this);
-        },
-
-        backToMenu: function() {
-
-            this.score = 0;
-
-            this.game.state.start("Menu");
-        },
+            game.physics.arcade.overlap(this.bullets, this.balloons, hitBalloon, null, this);
+        }
     };
 
     return Main;

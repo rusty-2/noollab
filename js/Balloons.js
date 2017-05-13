@@ -20,6 +20,11 @@ define(["Balloon"], function(Balloon) {
         return balloon;
     };
 
+    Balloons.prototype.createRelativeTo = function (balloon) {
+        return this.create(balloon.xPos() - Math.random() * 50 + Math.random() * 50,
+            balloon.yPos() - Math.random() * 25 + Math.random() * 25);
+    }
+
     Balloons.prototype.anyAlive = function() {
         return this.total > 0;
     };

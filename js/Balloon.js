@@ -12,5 +12,17 @@ define([], function() {
         this.scale.setTo(this.level + 0.5, this.level + 0.5);
     };
 
+    Balloon.prototype.shrinkable = function() {
+        return this.level > 0;
+    };
+
+    Balloon.prototype.xPos = function() {
+        return this.body.x;
+    };
+
+    Balloon.prototype.yPos = function() {
+        return this.body.y;
+    };
+
     return Balloon;
 });
