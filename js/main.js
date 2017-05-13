@@ -124,7 +124,7 @@ Main.prototype = {
 
             if (bullet)
             {
-                bullet.reset(this.player.body.x + 6, this.player.body.y - 8);
+                bullet.reset(this.player.xPos() + 6, this.player.yPos() - 8);
                 bullet.body.velocity.y = -300;
                 this.bulletTime = game.time.now + 250;
             }

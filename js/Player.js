@@ -1,6 +1,5 @@
 Player = function(game, x , y) {
     Phaser.Sprite.call(this, game, x, y, 'dude');
-    this.game = game;
 
 //  We need to enable physics on the player
     game.physics.arcade.enable(this);
@@ -41,4 +40,12 @@ Player.prototype.moveLeft = function() {
 Player.prototype.stop = function() {
     this.animations.stop();
     this.frame = 4;
+};
+
+Player.prototype.xPos = function() {
+    return this.body.x;
+};
+
+Player.prototype.yPos = function() {
+    return this.body.y;
 };
