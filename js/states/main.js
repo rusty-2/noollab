@@ -36,9 +36,7 @@ Main.prototype = {
         game.physics.arcade.collide(this.player, this.platforms);
         game.physics.arcade.collide(this.balloons, this.platforms);
 
-        var hitPlayer = game.physics.arcade.collide(this.balloons, this.player);
-
-        if(hitPlayer || !this.balloons.anyAlive()) {
+        if(this.player.collideWith(this.balloons) || !this.balloons.anyAlive()) {
             this.endGame();
         }
 

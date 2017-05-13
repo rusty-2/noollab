@@ -1,6 +1,6 @@
 var Player = function(game, x , y) {
     Phaser.Sprite.call(this, game, x, y, 'dude');
-
+    this.game = game;
 //  We need to enable physics on the player
     game.physics.arcade.enable(this);
 
@@ -48,4 +48,8 @@ Player.prototype.xPos = function() {
 
 Player.prototype.yPos = function() {
     return this.body.y;
+};
+
+Player.prototype.collideWith = function(object) {
+   return this.game.physics.arcade.collide(this, object);
 };
