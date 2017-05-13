@@ -9,7 +9,7 @@ Menu.prototype = {
 	},
 
   	create: function(){
-        var nameLabel = game.add.text(game.world.width/2 - 65, game.world.height/2, 'Noolab',
+        var nameLabel = game.add.text(game.world.width/2 - 65, game.world.height/2, 'Noollab',
                         { font: '50px Arial', fill: '#ffffff'} );
 
         var button = game.add.button(game.world.width/2 - 80, game.world.height - 100,

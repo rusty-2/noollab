@@ -20,19 +20,7 @@ Main.prototype = {
         ground.body.immovable = true;       //  This stops it from falling away when you jump on it
 
         // The player and its settings
-        player = game.add.sprite(game.world.width/2, game.world.height - 150, 'dude');
-
-        //  We need to enable physics on the player
-        game.physics.arcade.enable(player);
-
-        //  Player physics properties. Give the little guy a slight bounce.
-        player.body.bounce.y = 0.2;
-        player.body.gravity.y = 300;
-        player.body.collideWorldBounds = true;
-
-        //  Our two animations, walking left and right.
-        player.animations.add('left', [0, 1, 2, 3], 10, true);
-        player.animations.add('right', [5, 6, 7, 8], 10, true);
+        this.player = new Player(this.game, game.world.width/2, game.world.height - 150);
 
         balloons = game.add.group();
         balloons.enableBody = true;
@@ -64,10 +52,10 @@ Main.prototype = {
 
     update: function() {
         //  Collide the player and the balloons with the platforms
-        game.physics.arcade.collide(player, platforms);
+        game.physics.arcade.collide(this.player, platforms);
         game.physics.arcade.collide(balloons, platforms);
 
-        var hitPlayer = game.physics.arcade.collide(balloons, player);
+        var hitPlayer = game.physics.arcade.collide(balloons, this.player);
 
         if(hitPlayer || balloons.total == 0) {
             this.endGame();
@@ -76,25 +64,21 @@ Main.prototype = {
         var cursors = game.input.keyboard.createCursorKeys();
 
         //  Reset the players velocity (movement)
-        player.body.velocity.x = 0;
-
+        this.player.resetMovement();
         if (cursors.left.isDown)
         {
             //  Move to the left
-            player.body.velocity.x = -150;
-            player.animations.play('left');
+            this.player.moveLeft();
         }
         else if (cursors.right.isDown)
         {
             //  Move to the right
-            player.body.velocity.x = 150;
-            player.animations.play('right');
+            this.player.moveRight();
         }
         else
         {
             //  Stand still
-            player.animations.stop();
-            player.frame = 4;
+            this.player.stop();
         }
 
         if (this.spaceKey.isDown)
@@ -140,7 +124,7 @@ Main.prototype = {
 
             if (bullet)
             {
-                bullet.reset(player.body.x + 6, player.body.y - 8);
+                bullet.reset(this.player.body.x + 6, this.player.body.y - 8);
                 bullet.body.velocity.y = -300;
                 this.bulletTime = game.time.now + 250;
             }
