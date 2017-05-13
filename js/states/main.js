@@ -12,8 +12,8 @@ Main.prototype = {
         //  A simple background for our game
         game.add.sprite(0, 0, 'sky');
 
-        platforms = new Platforms(game);
-        ground = platforms.createGround(0, game.world.height - 64);
+        this.platforms = new Platforms(game);
+        this.ground = this.platforms.createGround(0, game.world.height - 64);
 
         // The player and its settings
         this.player = new Player(this.game, game.world.width/2, game.world.height - 150);
@@ -22,13 +22,7 @@ Main.prototype = {
         this.balloon = this.balloons.create(Math.random() * 800, 0);
         this.balloon.setLevel(2);
 
-        bullets = game.add.group();
-        bullets.enableBody = true;
-        bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        bullets.createMultiple(10, 'bullet');
-        bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
-        bullets.setAll('checkWorldBounds', true);
-
+        this.bullets = new Bullets(game);
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -37,11 +31,10 @@ Main.prototype = {
         game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR ]);
     },
 
-
     update: function() {
         //  Collide the player and the balloons with the platforms
-        game.physics.arcade.collide(this.player, platforms);
-        game.physics.arcade.collide(this.balloons, platforms);
+        game.physics.arcade.collide(this.player, this.platforms);
+        game.physics.arcade.collide(this.balloons, this.platforms);
 
         var hitPlayer = game.physics.arcade.collide(this.balloons, this.player);
 
@@ -74,7 +67,7 @@ Main.prototype = {
             this.fireBullet();
         }
 
-        game.physics.arcade.overlap(bullets, this.balloons, this.hitBalloon, null, this);
+        game.physics.arcade.overlap(this.bullets, this.balloons, this.hitBalloon, null, this);
     },
 
     hitBalloon: function(bullet, balloon) {
@@ -104,7 +97,7 @@ Main.prototype = {
 
         if (game.time.now > this.bulletTime)
         {
-            bullet = bullets.getFirstExists(false);
+            bullet = this.bullets.getFirstExists(false);
 
             if (bullet)
             {
@@ -115,17 +108,13 @@ Main.prototype = {
         }
     },
 
-    //  Called if the bullet goes out of the screen
-    resetBullet: function(bullet) {
-        bullet.kill();
-    },
+
 
     endGame: function() {
         scoreText.text = '';
 
         var finalScoreText = game.add.text(game.world.width/2 - 100, game.world.height/2,
                             'Final score: ' + this.score, { fontSize: '32px', fill: '#000' });
-
         var restartText = game.add.text(game.world.width/2 - 275, game.world.height - 55,
                             'Press \'Space\' to get back to menu screen');
 

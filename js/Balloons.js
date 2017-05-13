@@ -4,7 +4,7 @@ var Balloons = function (game) {
 
   this.enableBody = true; //  We will enable physics for any object that is created in this group
 
-  };
+};
 
 
 Balloons.prototype = Object.create(Phaser.Group.prototype);
