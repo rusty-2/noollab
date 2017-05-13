@@ -1,18 +1,21 @@
-var Boot = function(game){
+define([], function() {
+    function Boot(game) {
 
-};
+    };
 
-Boot.prototype = {
+    Boot.prototype = {
 
-	preload: function(){
+        preload: function() {
 
-	},
+        },
 
-  	create: function(){
-        
-        //  We're going to be using physics, so enable the Arcade Physics system
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        create: function() {
 
-		this.game.state.start("Preload");
-	}
-}
+            //  We're going to be using physics, so enable the Arcade Physics system
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            this.game.state.start("Preload");
+        }
+    }
+    return Boot;
+});

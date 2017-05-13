@@ -1,4 +1,5 @@
-var Preload = function(game){};
+define([], function() {
+  function Preload(game){};
 
 Preload.prototype = {
 
@@ -16,3 +17,6 @@ Preload.prototype = {
     		this.game.state.start("Menu");
     	}
     }
+
+    return Preload;
+});

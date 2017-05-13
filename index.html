@@ -4,16 +4,7 @@
 	<meta charset="UTF-8" />
 	<title>Bubbles</title>
     <script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
-	<script type="text/javascript" src="js/states/boot.js"></script>
-	<script type="text/javascript" src="js/states/preload.js"></script>
-    <script type="text/javascript" src="js/states/menu.js"></script>
-		<script type="text/javascript" src="js/Player.js"></script>
-		<script type="text/javascript" src="js/Platforms.js"></script>
-		<script type="text/javascript" src="js/Platform.js"></script>
-		<script type="text/javascript" src="js/Balloons.js"></script>
-		<script type="text/javascript" src="js/Balloon.js"></script>
-		<script type="text/javascript" src="js/Bullets.js"></script>
-	<script type="text/javascript" src="js/states/main.js"></script>
+			<script type="text/javascript" src="js/scripts/require.js"></script>
 
     <style type="text/css">
         body {
@@ -24,8 +15,10 @@
 <body>
 
     <script type="text/javascript">
-
-    (function() {
+		requirejs.config({
+		    baseUrl: 'js',
+		});
+    requirejs(["states/boot", "states/preload", "states/menu", "states/main"], function(Boot, Preload, Menu, Main) {
     				//Create a new game that fills the screen
     				//game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
@@ -39,7 +32,7 @@
 
     				//Start the first state
     				game.state.start("Boot");
-    		})();
+    		})
 
     </script>
 
