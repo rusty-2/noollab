@@ -1,4 +1,4 @@
-Player = function(game, x , y) {
+var Player = function(game, x , y) {
     Phaser.Sprite.call(this, game, x, y, 'dude');
 
 //  We need to enable physics on the player

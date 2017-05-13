@@ -12,27 +12,15 @@ Main.prototype = {
         //  A simple background for our game
         game.add.sprite(0, 0, 'sky');
 
-        platforms = game.add.group();
-        platforms.enableBody = true;        //  We will enable physics for any object that is created in this group
-
-        ground = platforms.create(0, game.world.height - 64, 'ground');
-        ground.scale.setTo(2, 2);           //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        ground.body.immovable = true;       //  This stops it from falling away when you jump on it
+        platforms = new Platforms(game);
+        ground = platforms.createGround(0, game.world.height - 64);
 
         // The player and its settings
         this.player = new Player(this.game, game.world.width/2, game.world.height - 150);
 
-        balloons = game.add.group();
-        balloons.enableBody = true;
-
-        //  Create a balloon inside of the 'balloons' group
-        balloon = balloons.create(Math.random() * 800, 0, 'balloon');
-
-        balloon.level = 2;
-        balloon.body.gravity.y = 60;
-        balloon.body.bounce.y = 0.4 + Math.random() * 0.2;     //  This just gives each balloon a slightly random bounce value
-        balloon.body.collideWorldBounds = true;
-        balloon.scale.setTo(balloon.level + 0.5, balloon.level + 0.5);
+        this.balloons = new Balloons(game);
+        this.balloon = this.balloons.create(Math.random() * 800, 0);
+        this.balloon.setLevel(2);
 
         bullets = game.add.group();
         bullets.enableBody = true;
@@ -53,11 +41,11 @@ Main.prototype = {
     update: function() {
         //  Collide the player and the balloons with the platforms
         game.physics.arcade.collide(this.player, platforms);
-        game.physics.arcade.collide(balloons, platforms);
+        game.physics.arcade.collide(this.balloons, platforms);
 
-        var hitPlayer = game.physics.arcade.collide(balloons, this.player);
+        var hitPlayer = game.physics.arcade.collide(this.balloons, this.player);
 
-        if(hitPlayer || balloons.total == 0) {
+        if(hitPlayer || !this.balloons.anyAlive()) {
             this.endGame();
         }
 
@@ -86,7 +74,7 @@ Main.prototype = {
             this.fireBullet();
         }
 
-        game.physics.arcade.overlap(bullets, balloons, this.hitBalloon, null, this);
+        game.physics.arcade.overlap(bullets, this.balloons, this.hitBalloon, null, this);
     },
 
     hitBalloon: function(bullet, balloon) {
@@ -96,17 +84,13 @@ Main.prototype = {
 
         if( balloon.level > 0 ) {
 
-            var firstNewBalloon = balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
-                                                balloon.body.y - Math.random() * 25 + Math.random() * 25, 'balloon');
-            var secondNewBalloon = balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
-                                                balloon.body.y - Math.random() * 25 + Math.random() * 25, 'balloon');
-
-            firstNewBalloon.level = secondNewBalloon.level = --balloon.level;
-            firstNewBalloon.body.velocity.y = secondNewBalloon.body.velocity.y = 60;
-            firstNewBalloon.body.bounce.y = secondNewBalloon.body.bounce.y = 0.4 + Math.random() * 0.2;
-            firstNewBalloon.body.collideWorldBounds = secondNewBalloon.body.collideWorldBounds = true;
-            firstNewBalloon.scale.setTo(balloon.level + 0.5, balloon.level + 0.5);
-            secondNewBalloon.scale.setTo(balloon.level + 0.5, balloon.level + 0.5);
+            var firstNewBalloon = this.balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
+                                                balloon.body.y - Math.random() * 25 + Math.random() * 25);
+            var secondNewBalloon = this.balloons.create(balloon.body.x - Math.random() * 50 + Math.random() * 50,
+                                                balloon.body.y - Math.random() * 25 + Math.random() * 25);
+            var newLevel = --balloon.level;
+            firstNewBalloon.setLevel(newLevel);
+            secondNewBalloon.setLevel(newLevel);
         }
 
         balloon.kill();
