@@ -42,6 +42,7 @@ define([
 
     function endGame() {
         scoreText.text = '';
+        livesText.text = '';
 
         var finalScoreText = game.add.text(game.world.width / 2 - 100, game.world.height / 2,
             'Final score: ' + this.score, {
@@ -77,10 +78,18 @@ define([
             this.balloon.setLevel(2);
 
             this.bullets = new Bullets(game);
-            scoreText = game.add.text(16, 16, 'score: 0', {
+            scoreText = game.add.text(16, 16, 'Score: 0', {
                 fontSize: '32px',
                 fill: '#000'
             });
+
+            livesText = game.add.text(game.world.width - 120, 16, 'Lives: 3', {
+                fontSize: '32px',
+                fill: '#000'
+            });
+
+            // Used in update to prevent infinite collisions
+            this.timeDelay = 0;
 
             this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
@@ -93,7 +102,16 @@ define([
             game.physics.arcade.collide(this.player, this.platforms);
             game.physics.arcade.collide(this.balloons, this.platforms);
 
-            if (this.player.collideWith(this.balloons) || !this.balloons.anyAlive()) {
+            if (this.player.collideWith(this.balloons)) {
+                if (game.time.now > this.timeDelay) {
+                    this.player.lives--;
+                    this.timeDelay = game.time.now + 1000;
+
+                    livesText.text = 'Lives: ' + this.player.lives;
+                }
+            }
+
+            if (this.player.lives == 0 || !this.balloons.anyAlive()) {
                 endGame.call(this);
             }
 
