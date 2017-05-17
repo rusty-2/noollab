@@ -54,8 +54,8 @@ define([], function() {
         return this.body.y;
     };
 
-    Player.prototype.collideWith = function(object) {
-        return this.game.physics.arcade.collide(this, object);
+    Player.prototype.overlapWith = function(object) {
+        return this.game.physics.arcade.overlap(this, object);
     };
 
     Player.prototype.blink = function() {

@@ -105,7 +105,7 @@ define([
             game.physics.arcade.collide(this.player, this.platforms);
             game.physics.arcade.collide(this.balloons, this.platforms);
 
-            if (this.player.collideWith(this.balloons)) {
+            if (this.player.overlapWith(this.balloons)) {
                 if (game.time.now > this.collisionDelay) {
                     this.player.lives--;
                     this.collisionDelay = game.time.now + 1000;
