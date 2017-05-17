@@ -89,7 +89,10 @@ define([
             });
 
             // Used in update to prevent infinite collisions
-            this.timeDelay = 0;
+            this.collisionDelay = 0;
+
+            // Used in update to make blinking visible
+            this.blinkDelay = 0;
 
             this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
@@ -103,12 +106,21 @@ define([
             game.physics.arcade.collide(this.balloons, this.platforms);
 
             if (this.player.collideWith(this.balloons)) {
-                if (game.time.now > this.timeDelay) {
+                if (game.time.now > this.collisionDelay) {
                     this.player.lives--;
-                    this.timeDelay = game.time.now + 1000;
+                    this.collisionDelay = game.time.now + 1000;
+
+                    this.player.blinkCounter = 4;
+                    this.playerBlinking = this.player.blink();
+                    this.blinkDelay = game.time.now + 250;
 
                     livesText.text = 'Lives: ' + this.player.lives;
                 }
+            }
+
+            if(this.playerBlinking == true && game.time.now > this.blinkDelay) {
+                this.playerBlinking = this.player.blink();
+                this.blinkDelay = game.time.now + 250;
             }
 
             if (this.player.lives == 0 || !this.balloons.anyAlive()) {

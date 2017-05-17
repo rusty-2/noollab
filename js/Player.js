@@ -15,6 +15,7 @@ define([], function() {
         this.animations.add('right', [5, 6, 7, 8], 10, true);
 
         this.lives = 3;
+        this.blinkCounter = 0;
 
         game.add.existing(this);
     };
@@ -56,5 +57,22 @@ define([], function() {
     Player.prototype.collideWith = function(object) {
         return this.game.physics.arcade.collide(this, object);
     };
+
+    Player.prototype.blink = function() {
+        if( this.tint == 0xffffff) {
+            this.tint = 0xff0000
+            this.alpha = 0.7;
+        } else {
+            this.tint = 0xffffff;
+            this.alpha = 1;
+        }
+
+        if(--this.blinkCounter == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
     return Player;
 });
