@@ -60,6 +60,23 @@ define([
         this.game.state.start("Menu");
     }
 
+    function handleKeyboardInput() {
+      var cursors = game.input.keyboard.createCursorKeys();
+
+      this.player.resetMovement();
+      if (cursors.left.isDown) {
+          this.player.moveLeft();
+      } else if (cursors.right.isDown) {
+          this.player.moveRight();
+      } else {
+          this.player.stop();
+      }
+
+      if (this.spaceKey.isDown) {
+          fireBullet.call(this);
+      }
+    }
+
     Main.prototype = {
 
         create: function() {
@@ -83,7 +100,7 @@ define([
                 fill: '#000'
             });
 
-            livesText = game.add.text(game.world.width - 120, 16, 'Lives: 3', {
+            livesText = game.add.text(game.world.width - 120, 16, 'Lives: ' + this.player.lives, {
                 fontSize: '32px',
                 fill: '#000'
             });
@@ -127,24 +144,7 @@ define([
                 endGame.call(this);
             }
 
-            var cursors = game.input.keyboard.createCursorKeys();
-
-            //  Reset the players velocity (movement)
-            this.player.resetMovement();
-            if (cursors.left.isDown) {
-                //  Move to the left
-                this.player.moveLeft();
-            } else if (cursors.right.isDown) {
-                //  Move to the right
-                this.player.moveRight();
-            } else {
-                //  Stand still
-                this.player.stop();
-            }
-
-            if (this.spaceKey.isDown) {
-                fireBullet.call(this);
-            }
+            handleKeyboardInput.call(this);
 
             game.physics.arcade.overlap(this.bullets, this.balloons, hitBalloon, null, this);
         }
