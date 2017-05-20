@@ -9,6 +9,10 @@ define([
         this.bulletTime = 0;
     }
 
+    function currentTime() {
+      return game.time.now;
+    }
+
     function hitBalloon(bullet, balloon) {
         // Removes the bullet from the screen
         bullet.kill();
@@ -29,13 +33,13 @@ define([
     }
 
     function fireBullet() {
-        if (game.time.now > this.bulletTime) {
+        if (currentTime() > this.bulletTime) {
             bullet = this.bullets.getFirstExists(false);
 
             if (bullet) {
                 bullet.reset(this.player.xPos() + 6, this.player.yPos() - 8);
                 bullet.body.velocity.y = -300;
-                this.bulletTime = game.time.now + 250;
+                this.bulletTime = currentTime() + 250;
             }
         }
     }
@@ -123,21 +127,21 @@ define([
             game.physics.arcade.collide(this.balloons, this.platforms);
 
             if (this.player.overlapWith(this.balloons)) {
-                if (game.time.now > this.collisionDelay) {
+                if (currentTime() > this.collisionDelay) {
                     this.player.endLife();
-                    this.collisionDelay = game.time.now + 1000;
+                    this.collisionDelay = currentTime() + 1000;
 
                     this.player.blinkCounter = 4;
                     this.playerBlinking = this.player.blink();
-                    this.blinkDelay = game.time.now + 250;
+                    this.blinkDelay = currentTime() + 250;
 
                     livesText.text = 'Lives: ' + this.player.lives;
                 }
             }
 
-            if(this.playerBlinking == true && game.time.now > this.blinkDelay) {
+            if(this.playerBlinking == true && currentTime() > this.blinkDelay) {
                 this.playerBlinking = this.player.blink();
-                this.blinkDelay = game.time.now + 250;
+                this.blinkDelay = currentTime() + 250;
             }
 
             if (!this.player.isAlive() || !this.balloons.anyAlive()) {
