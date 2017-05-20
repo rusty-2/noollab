@@ -107,7 +107,7 @@ define([
 
             if (this.player.overlapWith(this.balloons)) {
                 if (game.time.now > this.collisionDelay) {
-                    this.player.lives--;
+                    this.player.endLife();
                     this.collisionDelay = game.time.now + 1000;
 
                     this.player.blinkCounter = 4;
@@ -123,7 +123,7 @@ define([
                 this.blinkDelay = game.time.now + 250;
             }
 
-            if (this.player.lives == 0 || !this.balloons.anyAlive()) {
+            if (!this.player.isAlive() || !this.balloons.anyAlive()) {
                 endGame.call(this);
             }
 

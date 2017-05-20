@@ -74,5 +74,15 @@ define([], function() {
         }
     };
 
+    Player.prototype.endLife = function() {
+        if(this.isAlive()) {
+            this.lives--;
+        }
+    }
+
+    Player.prototype.isAlive = function() {
+      return this.lives > 0;
+    }
+
     return Player;
 });
