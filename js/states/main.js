@@ -57,11 +57,18 @@ define([
                 fontSize: '32px',
                 fill: '#000'
             });
-        var restartText = game.add.text(game.world.width / 2 - 275, game.world.height - 55,
-            'Press \'Space\' to get back to menu screen, Enter to play next level');
+        var restartText = game.add.text(15, game.world.height - 55,
+            'Press \'Space\' to get back to menu screen');
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
-        this.enterKey.onDown.addOnce(goToNextLevel, this);
+    }
+
+    function chooseNextAction() {
+      game.add.text(15, game.world.height - 55,
+          'Press \'Space\' to go to Menu, Enter to play next level');
+
+      this.spaceKey.onDown.addOnce(backToMenu, this);
+      this.enterKey.onDown.addOnce(goToNextLevel, this);
     }
 
     function backToMenu() {
@@ -172,8 +179,10 @@ define([
                 this.blinkDelay = currentTime() + 250;
             }
 
-            if (!this.player.isAlive() || !this.balloons.anyAlive()) {
+            if (!this.player.isAlive()) {
                 endGame.call(this);
+            } else if(!this.balloons.anyAlive()) {
+                chooseNextAction.call(this);
             }
 
             handleKeyboardInput.call(this);
