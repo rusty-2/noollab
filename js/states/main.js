@@ -3,8 +3,9 @@ define([
     "Bullets",
     "Platforms",
     "Player",
-    "levels/level1"
-], function(Balloons, Bullets, Platforms, Player, level1) {
+    "levels/level1",
+    "levels/level2"
+], function(Balloons, Bullets, Platforms, Player, level1, level2) {
     function Main(game) {
         this.score = 0;
         this.bulletTime = 0;
@@ -57,14 +58,24 @@ define([
                 fill: '#000'
             });
         var restartText = game.add.text(game.world.width / 2 - 275, game.world.height - 55,
-            'Press \'Space\' to get back to menu screen');
+            'Press \'Space\' to get back to menu screen, Enter to play next level');
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
+        this.enterKey.onDown.addOnce(goToNextLevel, this);
     }
 
     function backToMenu() {
         this.score = 0;
         this.game.state.start("Menu");
+    }
+
+    function goToNextLevel() {
+      if(this.game.levels.current<2){
+         this.game.levels.current++;
+      } else {
+        this.game.levels.current = 1;
+      }
+      this.game.state.start("Main");
     }
 
     function handleKeyboardInput() {
@@ -87,7 +98,7 @@ define([
     Main.prototype = {
 
         create: function() {
-            var levels = [level1];
+            var levels = [level1, level2];
             this.currentLevel = levels[game.levels.current-1];
             //  A simple background for our game
             game.add.sprite(0, 0, 'sky');
@@ -121,9 +132,10 @@ define([
             this.blinkDelay = 0;
 
             this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
             //  Stop the following keys from propagating up to the browser
-            game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR]);
+            game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
         },
 
         update: function() {

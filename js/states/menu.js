@@ -6,7 +6,7 @@ define([], function() {
     Menu.prototype = {
 
         preload: function() {
-
+          this.game.levels = {current:1};
         },
 
         create: function() {

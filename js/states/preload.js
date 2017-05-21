@@ -14,7 +14,6 @@ Preload.prototype = {
     },
 
     create: function() {
-        this.game.levels = {current:1};
     		this.game.state.start("Menu");
     	}
     }
