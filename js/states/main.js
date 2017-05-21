@@ -18,8 +18,10 @@ define([
         bullet.kill();
 
         if (balloon.shrinkable()) {
-            var firstNewBalloon = this.balloons.createRelativeTo(balloon);
-            var secondNewBalloon = this.balloons.createRelativeTo(balloon);
+            var x = balloon.xPos();
+            var y = balloon.yPos();
+            var firstNewBalloon = this.balloons.createRelativeTo(x, y, true);
+            var secondNewBalloon = this.balloons.createRelativeTo(x, y, false);
             var newLevel = --balloon.level;
             firstNewBalloon.setLevel(newLevel);
             secondNewBalloon.setLevel(newLevel);
@@ -95,7 +97,7 @@ define([
             this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
 
             this.balloons = new Balloons(game);
-            this.balloon = this.balloons.create(Math.random() * 800, 0);
+            this.balloon = this.balloons.create(400-25/2, 200, 0);
             this.balloon.setLevel(2);
 
             this.bullets = new Bullets(game);
