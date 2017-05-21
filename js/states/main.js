@@ -130,9 +130,10 @@ define([
                 fill: '#000'
             });
 
-            setTimeout(function() {
+
+            game.time.events.add(Phaser.Timer.SECOND, function() {
               levelText.destroy();
-            }, 1000);
+            }, this);
 
 
             // Used in update to prevent infinite collisions
