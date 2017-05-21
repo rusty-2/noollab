@@ -125,6 +125,16 @@ define([
                 fill: '#000'
             });
 
+            levelText = game.add.text(game.world.width/2 -15, game.world.height/2 -15, 'Level: ' + this.game.levels.current, {
+                fontSize: '32px',
+                fill: '#000'
+            });
+
+            setTimeout(function() {
+              levelText.destroy();
+            }, 1000);
+
+
             // Used in update to prevent infinite collisions
             this.collisionDelay = 0;
 
