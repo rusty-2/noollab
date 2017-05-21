@@ -115,7 +115,7 @@ define([
 
 
             this.bullets = new Bullets(game);
-            scoreText = game.add.text(16, 16, 'Score: 0', {
+            scoreText = game.add.text(16, 16, 'Score: ' + this.score, {
                 fontSize: '32px',
                 fill: '#000'
             });
