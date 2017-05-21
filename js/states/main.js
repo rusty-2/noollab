@@ -2,8 +2,9 @@ define([
     "Balloons",
     "Bullets",
     "Platforms",
-    "Player"
-], function(Balloons, Bullets, Platforms, Player) {
+    "Player",
+    "levels/level1"
+], function(Balloons, Bullets, Platforms, Player, level1) {
     function Main(game) {
         this.score = 0;
         this.bulletTime = 0;
@@ -86,7 +87,8 @@ define([
     Main.prototype = {
 
         create: function() {
-
+            var levels = [level1];
+            this.currentLevel = levels[game.levels.current-1];
             //  A simple background for our game
             game.add.sprite(0, 0, 'sky');
 
@@ -98,7 +100,8 @@ define([
 
             this.balloons = new Balloons(game);
             this.balloon = this.balloons.create(400-25/2, 200, 0);
-            this.balloon.setLevel(2);
+            this.balloon.setLevel(this.currentLevel.balloon.level);
+
 
             this.bullets = new Bullets(game);
             scoreText = game.add.text(16, 16, 'Score: 0', {
