@@ -1,7 +1,11 @@
 define([], function () {
     return {
-        balloon: {
-          level: 2
-        }
+        balloons: [{
+          level: 2,
+          pos: {
+            x:400-25/2,
+            y:200
+          }
+        }]
     };
 });

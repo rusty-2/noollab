@@ -102,6 +102,15 @@ define([
       }
     }
 
+    function createBalloons() {
+      var balloonsConfig = this.currentLevel.balloons;
+      for(var i=0;i<balloonsConfig.length;i++) {
+        var balloonConfig = balloonsConfig[i];
+        var newBalloon = this.balloons.create(balloonConfig.pos.x, balloonConfig.pos.y, 0);
+        newBalloon.setLevel(balloonConfig.level);
+      }
+    }
+
     Main.prototype = {
 
         create: function() {
@@ -117,9 +126,7 @@ define([
             this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
 
             this.balloons = new Balloons(game);
-            this.balloon = this.balloons.create(400-25/2, 200, 0);
-            this.balloon.setLevel(this.currentLevel.balloon.level);
-
+            createBalloons.call(this);
 
             this.bullets = new Bullets(game);
             scoreText = game.add.text(16, 16, 'Score: ' + this.score, {
