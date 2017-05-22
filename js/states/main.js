@@ -3,10 +3,11 @@ define([
     "Bullets",
     "Platforms",
     "Player",
+    "utils/TextBuilder",
     "levels/level1",
     "levels/level2",
     "levels/level3"
-], function(Balloons, Bullets, Platforms, Player, level1, level2, level3) {
+], function(Balloons, Bullets, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
         this.bulletTime = 0;
@@ -50,16 +51,19 @@ define([
     }
 
     function endGame() {
-        scoreText.text = '';
-        livesText.text = '';
+        this.timer.stop();
+        scoreText.destroy();
+        livesText.destroy();
 
-        var finalScoreText = game.add.text(game.world.width / 2 - 100, game.world.height / 2,
-            'Final score: ' + this.score, {
-                fontSize: '32px',
-                fill: '#000'
-            });
-        var restartText = game.add.text(15, game.world.height - 55,
-            'Press \'Space\' to get back to menu screen');
+        new TextBuilder(game)
+       .setText('Final score: ' + this.score)
+       .middle()
+       .build();
+
+        new TextBuilder(game)
+       .setText('Press \'Space\' to get back to menu screen')
+       .bottom()
+       .build();
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
     }
@@ -67,14 +71,15 @@ define([
     function chooseNextAction() {
         this.timer.stop();
 
+        new TextBuilder(game)
+       .setText('Score after level ' + this.game.levels.current + ' : ' + this.score)
+       .middle()
+       .build();
 
-        game.add.text(game.world.width / 2 - 140, game.world.height / 2,
-            'Score after level ' + this.game.levels.current + ' : ' + this.score, {
-                fontSize: '32px',
-                fill: '#000'
-            });
-        game.add.text(15, game.world.height - 55,
-            'Press \'Space\' to go to Menu, Enter to play next level');
+        new TextBuilder(game)
+       .setText('Press \'Space\' to go to Menu, Enter to play next level')
+       .bottom()
+       .build();
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
         this.enterKey.onDown.addOnce(goToNextLevel, this);
@@ -146,21 +151,23 @@ define([
             this.balloons.createForConfig(this.currentLevel.balloons);
 
             this.bullets = new Bullets(game);
-            scoreText = game.add.text(16, 16, 'Score: ' + this.score, {
-                fontSize: '32px',
-                fill: '#000'
-            });
 
-            livesText = game.add.text(game.world.width - 120, 16, 'Lives: ' + this.player.lives, {
-                fontSize: '32px',
-                fill: '#000'
-            });
+            scoreText = new TextBuilder(game)
+            .setText( 'Score: ' + this.score)
+            .setX(16)
+            .setY(16)
+            .build();
 
-            levelText = game.add.text(game.world.width / 2 - 15, game.world.height / 2 - 15, 'Level: ' + this.game.levels.current, {
-                fontSize: '32px',
-                fill: '#000'
-            });
+            livesText = new TextBuilder(game)
+            .setText('Lives: ' + this.player.lives)
+            .setX(game.world.width - 120)
+            .setY(16)
+            .build();
 
+            var levelText = new TextBuilder(game)
+            .setText('Level: ' + this.game.levels.current)
+            .middle()
+            .build();
 
             game.time.events.add(Phaser.Timer.SECOND, function() {
                 levelText.destroy();
