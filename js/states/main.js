@@ -102,6 +102,15 @@ define([
       }
     }
 
+    function createTimeBar() {
+      this.timer = game.time.create(false);
+
+      var originalTimeBarWidth = this.timeBar.width;
+      this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
+      this.timer.add(1000*this.currentLevel.time, handleTimeEnded, this);
+      this.timer.start();
+    }
+
     function updateTimeBar(originalWidth, time) {
       this.timeBar.width -= originalWidth/time;
     }
@@ -161,12 +170,7 @@ define([
             //  Stop the following keys from propagating up to the browser
             game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
 
-           this.timer = game.time.create(false);
-
-           var originalTimeBarWidth = this.timeBar.width;
-           this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
-           this.timer.add(1000*this.currentLevel.time, handleTimeEnded, this);
-           this.timer.start();
+            createTimeBar.call(this);
         },
 
         update: function() {
