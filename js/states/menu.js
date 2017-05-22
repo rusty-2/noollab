@@ -6,7 +6,7 @@ define([], function() {
     function start() {
 
         this.game.state.start("Main");
-    },
+    }
 
     function actionOnClick() {
 

@@ -1,16 +1,22 @@
 define([], function() {
     return {
-        time: 60,
+        time: 90,
         balloons: [{
+            level: 3,
+            pos: {
+                x: 400,
+                y: 50
+            }
+        }, {
             level: 2,
             pos: {
-                x: 150,
+                x: 100,
                 y: 150
             }
         }, {
             level: 2,
             pos: {
-                x: 600,
+                x: 700,
                 y: 150
             }
         }]

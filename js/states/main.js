@@ -4,15 +4,16 @@ define([
     "Platforms",
     "Player",
     "levels/level1",
-    "levels/level2"
-], function(Balloons, Bullets, Platforms, Player, level1, level2) {
+    "levels/level2",
+    "levels/level3"
+], function(Balloons, Bullets, Platforms, Player, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
         this.bulletTime = 0;
     }
 
     function currentTime() {
-      return game.time.now;
+        return game.time.now;
     }
 
     function hitBalloon(bullet, balloon) {
@@ -64,11 +65,19 @@ define([
     }
 
     function chooseNextAction() {
-      game.add.text(15, game.world.height - 55,
-          'Press \'Space\' to go to Menu, Enter to play next level');
+        this.timer.stop();
 
-      this.spaceKey.onDown.addOnce(backToMenu, this);
-      this.enterKey.onDown.addOnce(goToNextLevel, this);
+
+        game.add.text(game.world.width / 2 - 140, game.world.height / 2,
+            'Score after level ' + this.game.levels.current + ' : ' + this.score, {
+                fontSize: '32px',
+                fill: '#000'
+            });
+        game.add.text(15, game.world.height - 55,
+            'Press \'Space\' to go to Menu, Enter to play next level');
+
+        this.spaceKey.onDown.addOnce(backToMenu, this);
+        this.enterKey.onDown.addOnce(goToNextLevel, this);
     }
 
     function backToMenu() {
@@ -77,54 +86,54 @@ define([
     }
 
     function goToNextLevel() {
-      if(this.game.levels.current<2){
-         this.game.levels.current++;
-      } else {
-        this.game.levels.current = 1;
-      }
-      this.game.state.start("Main");
+        if (this.game.levels.current < 3) {
+            this.game.levels.current++;
+        } else {
+            this.game.levels.current = 1;
+        }
+        this.game.state.start("Main");
     }
 
     function handleKeyboardInput() {
-      var cursors = game.input.keyboard.createCursorKeys();
+        var cursors = game.input.keyboard.createCursorKeys();
 
-      this.player.resetMovement();
-      if (cursors.left.isDown) {
-          this.player.moveLeft();
-      } else if (cursors.right.isDown) {
-          this.player.moveRight();
-      } else {
-          this.player.stop();
-      }
+        this.player.resetMovement();
+        if (cursors.left.isDown) {
+            this.player.moveLeft();
+        } else if (cursors.right.isDown) {
+            this.player.moveRight();
+        } else {
+            this.player.stop();
+        }
 
-      if (this.spaceKey.isDown) {
-          fireBullet.call(this);
-      }
+        if (this.spaceKey.isDown) {
+            fireBullet.call(this);
+        }
     }
 
     function createTimeBar() {
-      this.timer = game.time.create(false);
+        this.timer = game.time.create(false);
 
-      var originalTimeBarWidth = this.timeBar.width;
-      this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
-      this.timer.add(1000*this.currentLevel.time, handleTimeEnded, this);
-      this.timer.start();
+        var originalTimeBarWidth = this.timeBar.width;
+        this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
+        this.timer.add(1000 * this.currentLevel.time, handleTimeEnded, this);
+        this.timer.start();
     }
 
     function updateTimeBar(originalWidth, time) {
-      this.timeBar.width -= originalWidth/time;
+        this.timeBar.width -= originalWidth / time;
     }
 
     function handleTimeEnded() {
-      this.timer.destroy();
-      endGame.call(this);
+        this.timer.destroy();
+        endGame.call(this);
     }
 
     Main.prototype = {
 
         create: function() {
-            var levels = [level1, level2];
-            this.currentLevel = levels[game.levels.current-1];
+            var levels = [level1, level2, level3];
+            this.currentLevel = levels[game.levels.current - 1];
             game.add.sprite(0, 0, 'sky');
 
             this.platforms = new Platforms(game);
@@ -147,14 +156,14 @@ define([
                 fill: '#000'
             });
 
-            levelText = game.add.text(game.world.width/2 -15, game.world.height/2 -15, 'Level: ' + this.game.levels.current, {
+            levelText = game.add.text(game.world.width / 2 - 15, game.world.height / 2 - 15, 'Level: ' + this.game.levels.current, {
                 fontSize: '32px',
                 fill: '#000'
             });
 
 
             game.time.events.add(Phaser.Timer.SECOND, function() {
-              levelText.destroy();
+                levelText.destroy();
             }, this);
 
 
@@ -191,14 +200,14 @@ define([
                 }
             }
 
-            if(this.playerBlinking == true && currentTime() > this.blinkDelay) {
+            if (this.playerBlinking == true && currentTime() > this.blinkDelay) {
                 this.playerBlinking = this.player.blink();
                 this.blinkDelay = currentTime() + 250;
             }
 
             if (!this.player.isAlive()) {
                 endGame.call(this);
-            } else if(!this.balloons.anyAlive()) {
+            } else if (!this.balloons.anyAlive()) {
                 chooseNextAction.call(this);
             }
 
