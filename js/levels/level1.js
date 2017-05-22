@@ -1,6 +1,6 @@
 define([], function() {
     return {
-        time: 30, // time in seconds
+        time: 30, // seconds
         balloons: [{
             level: 2,
             pos: {
