@@ -70,7 +70,7 @@ define([
 
     function chooseNextAction() {
         this.timer.stop();
-
+        this.timer.destroy();
         new TextBuilder(game)
        .setText('Score after level ' + this.game.levels.current + ' : ' + this.score)
        .middle()
@@ -118,8 +118,9 @@ define([
 
     function createTimeBar() {
         var originalTimeBarWidth = this.timeBar.width;
-        this.game.time.events.repeat(Phaser.Timer.SECOND, this.currentLevel.time, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
         this.timer = game.time.create(false);
+        this.timer.repeat(Phaser.Timer.SECOND, this.currentLevel.time, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
+
         this.timer.add(Phaser.Timer.SECOND * this.currentLevel.time, handleTimeEnded, this);
         this.timer.start();
     }

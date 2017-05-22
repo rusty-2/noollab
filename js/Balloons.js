@@ -13,12 +13,13 @@ define(["Balloon"], function(Balloon) {
     Balloons.prototype = Object.create(Phaser.Group.prototype);
     Balloons.prototype.constructor = Balloons;
 
-    Balloons.prototype.create = function(x, y, xGravity) {
+    Balloons.prototype.create = function(x, y, xVelocity) {
         var balloon = new Balloon(this.game, x, y);
         this.add(balloon);
-        balloon.body.gravity.y = 60;
-        balloon.body.velocity.x = xGravity;
-        balloon.body.bounce.setTo(0,0.7) //  This just gives each balloon a slightly random bounce value
+        balloon.body.gravity.y = 220;
+        balloon.body.velocity.x = xVelocity;
+        balloon.body.velocity.y = 150;
+        balloon.body.bounce.setTo(1,1);
         balloon.body.collideWorldBounds = true;
         return balloon;
     };
