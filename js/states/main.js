@@ -117,11 +117,10 @@ define([
     }
 
     function createTimeBar() {
-        this.timer = game.time.create(false);
-
         var originalTimeBarWidth = this.timeBar.width;
-        this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
-        this.timer.add(1000 * this.currentLevel.time, handleTimeEnded, this);
+        this.game.time.events.repeat(Phaser.Timer.SECOND, this.currentLevel.time, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
+        this.timer = game.time.create(false);
+        this.timer.add(Phaser.Timer.SECOND * this.currentLevel.time, handleTimeEnded, this);
         this.timer.start();
     }
 
