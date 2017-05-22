@@ -134,6 +134,29 @@ define([
         endGame.call(this);
     }
 
+    function initText() {
+      scoreText = new TextBuilder(game)
+      .setText( 'Score: ' + this.score)
+      .setX(16)
+      .setY(16)
+      .build();
+
+      livesText = new TextBuilder(game)
+      .setText('Lives: ' + this.player.lives)
+      .setX(game.world.width - 120)
+      .setY(16)
+      .build();
+
+      var levelText = new TextBuilder(game)
+      .setText('Level: ' + this.game.levels.current)
+      .middle()
+      .build();
+
+      game.time.events.add(Phaser.Timer.SECOND, function() {
+          levelText.destroy();
+      }, this);
+    }
+
     Main.prototype = {
 
         create: function() {
@@ -152,27 +175,7 @@ define([
 
             this.bullets = new Bullets(game);
 
-            scoreText = new TextBuilder(game)
-            .setText( 'Score: ' + this.score)
-            .setX(16)
-            .setY(16)
-            .build();
-
-            livesText = new TextBuilder(game)
-            .setText('Lives: ' + this.player.lives)
-            .setX(game.world.width - 120)
-            .setY(16)
-            .build();
-
-            var levelText = new TextBuilder(game)
-            .setText('Level: ' + this.game.levels.current)
-            .middle()
-            .build();
-
-            game.time.events.add(Phaser.Timer.SECOND, function() {
-                levelText.destroy();
-            }, this);
-
+            initText.call(this);
 
             // Used in update to prevent infinite collisions
             this.collisionDelay = 0;
