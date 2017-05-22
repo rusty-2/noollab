@@ -19,5 +19,14 @@ define(["Platform"], function(Platform) {
         obj.body.immovable = true; //  This stops it from falling away when you jump on it
         return obj;
     };
+
+    Platforms.prototype.createTimeBar = function(x, y, key) {
+        var obj = new Platform(this.game, x, y, key);
+        this.add(obj);
+        obj.scale.setTo(2, 1); //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+        obj.body.immovable = true; //  This stops it from falling away when you jump on it
+        obj.tint = 0xff00ff;
+        return obj;
+    };
     return Platforms;
 });

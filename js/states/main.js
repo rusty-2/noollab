@@ -111,6 +111,10 @@ define([
       }
     }
 
+    function updateTimeBar(originalWidth) {
+      this.timeBar.width -= originalWidth/30
+    }
+
     Main.prototype = {
 
         create: function() {
@@ -121,6 +125,7 @@ define([
 
             this.platforms = new Platforms(game);
             this.ground = this.platforms.createGround(0, game.world.height - 64);
+            this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
 
             // The player and its settings
             this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
@@ -161,6 +166,16 @@ define([
 
             //  Stop the following keys from propagating up to the browser
             game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
+
+            timer = game.time.create(false);
+
+             //  Set a TimerEvent to occur after 2 seconds
+             var originalTimeBarWidth = this.timeBar.width;
+             timer.loop(1000, updateTimeBar, this, originalTimeBarWidth);
+
+             //  Start the timer running - this is important!
+             //  It won't start automatically, allowing you to hook it to button events and the like.
+             timer.start();
         },
 
         update: function() {
