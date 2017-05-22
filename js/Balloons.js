@@ -31,6 +31,14 @@ define(["Balloon"], function(Balloon) {
       return this.create(x - POSITION_CHANGE, y - POSITION_CHANGE, -GRAVITY);
     }
 
+    Balloons.prototype.createForConfig = function(balloonsConfig) {
+      for(var i=0;i<balloonsConfig.length;i++) {
+        var balloonConfig = balloonsConfig[i];
+        var newBalloon = this.create(balloonConfig.pos.x, balloonConfig.pos.y, 0);
+        newBalloon.setLevel(balloonConfig.level);
+      }
+    }
+
     Balloons.prototype.anyAlive = function() {
         return this.total > 0;
     };
