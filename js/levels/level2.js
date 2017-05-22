@@ -1,5 +1,6 @@
 define([], function() {
     return {
+        time: 10,
         balloons: [{
             level: 2,
             pos: {

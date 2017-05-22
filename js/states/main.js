@@ -102,8 +102,8 @@ define([
       }
     }
 
-    function updateTimeBar(originalWidth) {
-      this.timeBar.width -= originalWidth/30
+    function updateTimeBar(originalWidth, time) {
+      this.timeBar.width -= originalWidth/time;
     }
 
     function handleTimeEnded() {
@@ -116,14 +116,12 @@ define([
         create: function() {
             var levels = [level1, level2];
             this.currentLevel = levels[game.levels.current-1];
-            //  A simple background for our game
             game.add.sprite(0, 0, 'sky');
 
             this.platforms = new Platforms(game);
             this.ground = this.platforms.createGround(0, game.world.height - 64);
             this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
 
-            // The player and its settings
             this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
 
             this.balloons = new Balloons(game);
@@ -166,8 +164,8 @@ define([
            this.timer = game.time.create(false);
 
            var originalTimeBarWidth = this.timeBar.width;
-           this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth);
-           this.timer.add(1000*30, handleTimeEnded, this);
+           this.timer.loop(1000, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
+           this.timer.add(1000*this.currentLevel.time, handleTimeEnded, this);
            this.timer.start();
         },
 
