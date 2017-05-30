@@ -1,13 +1,14 @@
 define([
     "Balloons",
     "Bullets",
+    "Hearts",
     "Platforms",
     "Player",
     "utils/TextBuilder",
     "levels/level1",
     "levels/level2",
     "levels/level3"
-], function(Balloons, Bullets, Platforms, Player, TextBuilder, level1, level2, level3) {
+], function(Balloons, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
         this.bulletTime = 0;
@@ -50,10 +51,16 @@ define([
         }
     }
 
+    function spawnHeart(x, y) {
+        heart = this.hearts.getFirstExists(false);
+        heart.reset(x, y);
+
+        return heart;
+    }
+
     function endGame() {
         this.timer.stop();
         scoreText.destroy();
-        livesText.destroy();
 
         new TextBuilder(game)
        .setText('Final score: ' + this.score)
@@ -141,12 +148,6 @@ define([
       .setY(16)
       .build();
 
-      livesText = new TextBuilder(game)
-      .setText('Lives: ' + this.player.lives)
-      .setX(game.world.width - 120)
-      .setY(16)
-      .build();
-
       var levelText = new TextBuilder(game)
       .setText('Level: ' + this.game.levels.current)
       .middle()
@@ -174,6 +175,14 @@ define([
             this.balloons.createForConfig(this.currentLevel.balloons);
 
             this.bullets = new Bullets(game);
+
+            this.hearts = new Hearts(game);
+
+            this.heartsArray = [
+                spawnHeart.call(this, game.world.width - 135, 5),
+                spawnHeart.call(this, game.world.width - 90, 5),
+                spawnHeart.call(this, game.world.width - 45, 5)
+            ];
 
             initText.call(this);
 
@@ -206,7 +215,7 @@ define([
                     this.playerBlinking = this.player.blink();
                     this.blinkDelay = currentTime() + 250;
 
-                    livesText.text = 'Lives: ' + this.player.lives;
+                    this.heartsArray[this.player.lives].kill();
                 }
             }
 

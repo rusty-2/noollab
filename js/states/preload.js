@@ -9,6 +9,7 @@ Preload.prototype = {
     	game.load.image('balloon', 'assets/balloon.png');
         game.load.image('bullet', 'assets/bullet.png');
         game.load.image('logo', 'assets/logo.png');
+        game.load.image('heart', 'assets/heart.png');
         game.load.spritesheet('start_button','assets/button_sprite_sheet.png', 193, 71);
     	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
