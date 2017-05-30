@@ -23,16 +23,13 @@ define([], function() {
         },
 
         create: function() {
-            var nameLabel = game.add.text(game.world.width / 2 - 65, game.world.height / 2, 'Noollab', {
-                font: '50px Arial',
-                fill: '#ffffff'
-            });
 
-            var button = game.add.button(game.world.width / 2 - 80, game.world.height - 100,
+            game.add.sprite(0, 0, 'sky');
+
+            game.add.sprite(250, 50, 'logo');
+
+            var button = game.add.button(game.world.width / 2 - 96.5, game.world.height - 100,
                 'start_button', actionOnClick, this, 2, 1, 0);
-
-            //var startLabel = game.add.text(game.world.width/2 - 100, game.world.height - 80,
-            //                'Press \'Space\' to start!', { font: '25px Arial', fill: '#ffffff'} );
 
             var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
