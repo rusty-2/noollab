@@ -22,12 +22,17 @@ define([], function() {
 
             game.add.sprite(250, 50, 'logo');
 
-            var button = game.add.button(game.world.width / 2 - 96.5, game.world.height - 100,
-                'start_button', start.bind(this, 'standard'), this, 2, 1, 0);
+            var standardModeButton = game.add.button(game.world.width / 2 - 40, game.world.height - 250,
+                'single_player_button', start.bind(this, 'standard'), this, 1, 0, 2);
 
-            var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            var multiplayerModeButton = game.add.button(game.world.width / 2 - 40, game.world.height - 200,
+                'multi_player_button', start.bind(this, 'multiplayer'), this, 1, 0, 2);
 
-            spaceKey.onDown.addOnce(start, this);
+            var stayingAliveModeButton = game.add.button(game.world.width / 2 - 40, game.world.height - 150,
+                'staying_alive_button', null, this, 1, 0, 2);
+
+            var highscoresButton = game.add.button(game.world.width / 2 - 40, game.world.height - 100,
+                'highscores_button', null, this, 1, 0, 2);
         },
 
     }

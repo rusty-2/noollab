@@ -16,6 +16,7 @@ define([], function() {
 
         this.lives = 3;
         this.blinkCounter = 0;
+        this.isBlinking = false;
 
         game.add.existing(this);
     };

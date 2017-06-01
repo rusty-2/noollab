@@ -10,7 +10,10 @@ Preload.prototype = {
         game.load.image('bullet', 'assets/bullet.png');
         game.load.image('logo', 'assets/logo.png');
         game.load.image('heart', 'assets/heart.png');
-        game.load.spritesheet('start_button','assets/button_sprite_sheet.png', 193, 71);
+        game.load.spritesheet('single_player_button','assets/single_player_button.png', 87, 32);
+        game.load.spritesheet('multi_player_button','assets/multi_player_button.png', 87, 32);
+        game.load.spritesheet('staying_alive_button','assets/staying_alive_button.png', 87, 32);
+        game.load.spritesheet('highscores_button','assets/highscores_button.png', 87, 32);
     	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
     },

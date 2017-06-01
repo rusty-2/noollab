@@ -11,7 +11,8 @@ define([
 ], function(Balloons, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
-        this.bulletTime = 0;
+        this.playerBulletTime = 0;
+        this.secondPlayerBulletTime = 0;
     }
 
     function currentTime() {
@@ -39,14 +40,22 @@ define([
         scoreText.text = 'Score: ' + this.score;
     }
 
-    function fireBullet() {
-        if (currentTime() > this.bulletTime) {
+    function fireBullet(playerNumber) {
+        if (currentTime() > this.playerBulletTime && playerNumber == 1) {
             bullet = this.bullets.getFirstExists(false);
 
             if (bullet) {
                 bullet.reset(this.player.xPos() + 6, this.player.yPos() - 8);
                 bullet.body.velocity.y = -300;
-                this.bulletTime = currentTime() + 250;
+                this.playerBulletTime = currentTime() + 250;
+            }
+        } else if (currentTime() > this.secondPlayerBulletTime && playerNumber == 2) {
+            bullet = this.bullets.getFirstExists(false);
+
+            if (bullet) {
+                bullet.reset(this.secondPlayer.xPos() + 6, this.player.yPos() - 8);
+                bullet.body.velocity.y = -300;
+                this.secondPlayerBulletTime = currentTime() + 250;
             }
         }
     }
@@ -118,8 +127,23 @@ define([
             this.player.stop();
         }
 
-        if (this.spaceKey.isDown) {
-            fireBullet.call(this);
+        if (this.enterKey.isDown) {
+            fireBullet.call(this, 1);
+        }
+
+        if(this.mode == 'multiplayer') {
+            this.secondPlayer.resetMovement();
+            if (this.aKey.isDown) {
+                this.secondPlayer.moveLeft();
+            } else if (this.dKey.isDown) {
+                this.secondPlayer.moveRight();
+            } else {
+                this.secondPlayer.stop();
+            }
+
+            if (this.spaceKey.isDown) {
+                fireBullet.call(this, 2);
+            }
         }
     }
 
@@ -148,14 +172,16 @@ define([
       .setY(16)
       .build();
 
-      var levelText = new TextBuilder(game)
-      .setText('Level: ' + this.game.levels.current)
-      .middle()
-      .build();
+      if( this.mode != 'stayingAlive') {
+          var levelText = new TextBuilder(game)
+          .setText('Level: ' + this.game.levels.current)
+          .middle()
+          .build();
 
-      game.time.events.add(Phaser.Timer.SECOND, function() {
-          levelText.destroy();
-      }, this);
+          game.time.events.add(Phaser.Timer.SECOND, function() {
+              levelText.destroy();
+          }, this);
+      }
     }
 
     Main.prototype = {
@@ -165,15 +191,23 @@ define([
         },
 
         create: function() {
-            var levels = [level1, level2, level3];
-            this.currentLevel = levels[game.levels.current - 1];
+            if(this.mode != 'stayingAlive') {
+                var levels = [level1, level2, level3];
+                this.currentLevel = levels[game.levels.current - 1];
+            }
+
             game.add.sprite(0, 0, 'sky');
 
             this.platforms = new Platforms(game);
             this.ground = this.platforms.createGround(0, game.world.height - 64);
             this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
 
-            this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
+            if(this.mode != 'multiplayer') {
+                this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
+            } else {
+                this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150);
+                this.secondPlayer = new Player(this.game, game.world.width / 2 + 64, game.world.height - 150);
+            }
 
             this.balloons = new Balloons(game);
             this.balloons.createForConfig(this.currentLevel.balloons);
@@ -198,9 +232,12 @@ define([
 
             this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+            this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 
             //  Stop the following keys from propagating up to the browser
-            game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
+            game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR,
+                Phaser.Keyboard.ENTER, Phaser.Keyboard.A, Phaser.Keyboard.D]);
 
             createTimeBar.call(this);
         },
@@ -210,22 +247,46 @@ define([
             game.physics.arcade.collide(this.player, this.platforms);
             game.physics.arcade.collide(this.balloons, this.platforms);
 
+            if( this.mode == 'multiplayer') {
+                game.physics.arcade.collide(this.secondPlayer, this.platforms);
+            }
+
             if (this.player.overlapWith(this.balloons)) {
                 if (currentTime() > this.collisionDelay) {
                     this.player.endLife();
                     this.collisionDelay = currentTime() + 1000;
 
                     this.player.blinkCounter = 4;
-                    this.playerBlinking = this.player.blink();
+                    this.player.isBlinking = this.player.blink();
                     this.blinkDelay = currentTime() + 250;
 
                     this.heartsArray[this.player.lives].kill();
                 }
             }
 
-            if (this.playerBlinking == true && currentTime() > this.blinkDelay) {
-                this.playerBlinking = this.player.blink();
+            if (this.player.isBlinking == true && currentTime() > this.blinkDelay) {
+                this.player.isBlinking = this.player.blink();
                 this.blinkDelay = currentTime() + 250;
+            }
+
+            if(this.mode == 'multiplayer') {
+                if (this.secondPlayer.overlapWith(this.balloons)) {
+                    if (currentTime() > this.collisionDelay) {
+                        this.player.endLife();
+                        this.collisionDelay = currentTime() + 1000;
+
+                        this.secondPlayer.blinkCounter = 4;
+                        this.secondPlayer.isBlinking = this.secondPlayer.blink();
+                        this.blinkDelay = currentTime() + 250;
+
+                        this.heartsArray[this.player.lives].kill();
+                    }
+                }
+
+                if (this.secondPlayer.isBlinking == true && currentTime() > this.blinkDelay) {
+                    this.secondPlayer.isBlinking = this.secondPlayer.blink();
+                    this.blinkDelay = currentTime() + 250;
+                }
             }
 
             if (!this.player.isAlive()) {
