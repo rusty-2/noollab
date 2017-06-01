@@ -103,7 +103,7 @@ define([
         } else {
             this.game.levels.current = 1;
         }
-        this.game.state.start("Main");
+        this.game.state.start("Main", true, false, this.mode);
     }
 
     function handleKeyboardInput() {
@@ -159,6 +159,10 @@ define([
     }
 
     Main.prototype = {
+
+        init: function(mode) {
+            this.mode = mode;
+        },
 
         create: function() {
             var levels = [level1, level2, level3];
