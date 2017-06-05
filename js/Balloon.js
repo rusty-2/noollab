@@ -1,4 +1,4 @@
-/define([], function() {
+define([], function() {
     function Balloon(game, x, y) {
         Phaser.Sprite.call(this, game, x, y, 'balloon');
 
@@ -27,4 +27,3 @@
 
     return Balloon;
 });
-/

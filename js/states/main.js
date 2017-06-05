@@ -134,7 +134,7 @@ define([
             this.player.stop();
         }
 
-        if (this.enterKey.isDown && this.gameEnded == false) {
+        if (this.enterKey.isDown && !this.gameEnded) {
             fireBullet.call(this, 1);
         }
 
@@ -148,7 +148,7 @@ define([
                 this.secondPlayer.stop();
             }
 
-            if (this.spaceKey.isDown && this.gameEnded == false) {
+            if (this.spaceKey.isDown && !this.gameEnded) {
                 fireBullet.call(this, 2);
             }
         }
@@ -324,7 +324,7 @@ define([
 
             game.physics.arcade.overlap(this.bullets, this.balloons, hitBalloon, null, this);
 
-            if(this.mode == 'stayingAlive' && this.randomBalloonSpawnTimer < currentTime() && this.gameEnded == false) {
+            if(this.mode == 'stayingAlive' && this.randomBalloonSpawnTimer < currentTime() && !this.gameEnded) {
                 spawnBalloon.call(this);
 
                 this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
