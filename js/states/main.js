@@ -13,6 +13,7 @@ define([
         this.score = 0;
         this.playerBulletTime = 0;
         this.secondPlayerBulletTime = 0;
+        this.gameEnded = false;
     }
 
     function currentTime() {
@@ -68,7 +69,11 @@ define([
     }
 
     function endGame() {
-        this.timer.stop();
+        this.gameEnded = true;
+
+        if( this.mode != 'stayingAlive') {
+            this.timer.stop();
+        }
         scoreText.destroy();
 
         new TextBuilder(game)
@@ -85,8 +90,10 @@ define([
     }
 
     function chooseNextAction() {
-        this.timer.stop();
-        this.timer.destroy();
+        if( this.mode != 'stayingAlive') {
+            this.timer.stop();
+            this.timer.destroy();
+        }
         new TextBuilder(game)
        .setText('Score after level ' + this.game.levels.current + ' : ' + this.score)
        .middle()
@@ -127,7 +134,7 @@ define([
             this.player.stop();
         }
 
-        if (this.enterKey.isDown) {
+        if (this.enterKey.isDown && this.gameEnded == false) {
             fireBullet.call(this, 1);
         }
 
@@ -141,7 +148,7 @@ define([
                 this.secondPlayer.stop();
             }
 
-            if (this.spaceKey.isDown) {
+            if (this.spaceKey.isDown && this.gameEnded == false) {
                 fireBullet.call(this, 2);
             }
         }
@@ -153,6 +160,7 @@ define([
         this.timer.repeat(Phaser.Timer.SECOND, this.currentLevel.time, updateTimeBar, this, originalTimeBarWidth, this.currentLevel.time);
 
         this.timer.add(Phaser.Timer.SECOND * this.currentLevel.time, handleTimeEnded, this);
+
         this.timer.start();
     }
 
@@ -184,6 +192,12 @@ define([
       }
     }
 
+    function spawnBalloon() {
+        var balloon = this.balloons.create(this.game.world.width/2 + game.rnd.integerInRange(-300, 300),
+            25, 0);
+        balloon.setLevel(game.rnd.integerInRange(0, 3));
+    }
+
     Main.prototype = {
 
         init: function(mode) {
@@ -200,7 +214,10 @@ define([
 
             this.platforms = new Platforms(game);
             this.ground = this.platforms.createGround(0, game.world.height - 64);
-            this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
+
+            if(this.mode != 'stayingAlive') {
+                this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
+            }
 
             if(this.mode != 'multiplayer') {
                 this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
@@ -210,7 +227,13 @@ define([
             }
 
             this.balloons = new Balloons(game);
-            this.balloons.createForConfig(this.currentLevel.balloons);
+
+            if( this.mode != 'stayingAlive' ) {
+                this.balloons.createForConfig(this.currentLevel.balloons);
+            } else {
+                this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
+                spawnBalloon.call(this);
+            }
 
             this.bullets = new Bullets(game);
 
@@ -239,7 +262,9 @@ define([
             game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR,
                 Phaser.Keyboard.ENTER, Phaser.Keyboard.A, Phaser.Keyboard.D]);
 
-            createTimeBar.call(this);
+            if( this.mode != 'stayingAlive') {
+                createTimeBar.call(this);
+            }
         },
 
         update: function() {
@@ -291,13 +316,19 @@ define([
 
             if (!this.player.isAlive()) {
                 endGame.call(this);
-            } else if (!this.balloons.anyAlive()) {
+            } else if (!this.balloons.anyAlive() && this.mode != 'stayingAlive') {
                 chooseNextAction.call(this);
             }
 
             handleKeyboardInput.call(this);
 
             game.physics.arcade.overlap(this.bullets, this.balloons, hitBalloon, null, this);
+
+            if(this.mode == 'stayingAlive' && this.randomBalloonSpawnTimer < currentTime() && this.gameEnded == false) {
+                spawnBalloon.call(this);
+
+                this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
+            }
         }
     };
 

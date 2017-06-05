@@ -29,7 +29,7 @@ define([], function() {
                 'multi_player_button', start.bind(this, 'multiplayer'), this, 1, 0, 2);
 
             var stayingAliveModeButton = game.add.button(game.world.width / 2 - 40, game.world.height - 150,
-                'staying_alive_button', null, this, 1, 0, 2);
+                'staying_alive_button', start.bind(this, 'stayingAlive'), this, 1, 0, 2);
 
             var highscoresButton = game.add.button(game.world.width / 2 - 40, game.world.height - 100,
                 'highscores_button', null, this, 1, 0, 2);

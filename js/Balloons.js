@@ -16,10 +16,10 @@ define(["Balloon"], function(Balloon) {
     Balloons.prototype.create = function(x, y, xVelocity) {
         var balloon = new Balloon(this.game, x, y);
         this.add(balloon);
-        balloon.body.gravity.y = 220;
+        balloon.body.gravity.y = 50;
         balloon.body.velocity.x = xVelocity;
         balloon.body.velocity.y = 150;
-        balloon.body.bounce.setTo(1,1);
+        balloon.body.bounce.setTo(0,0.8);
         balloon.body.collideWorldBounds = true;
         return balloon;
     };
@@ -43,5 +43,6 @@ define(["Balloon"], function(Balloon) {
     Balloons.prototype.anyAlive = function() {
         return this.total > 0;
     };
+
     return Balloons;
 });
