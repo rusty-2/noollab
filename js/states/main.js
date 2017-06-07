@@ -71,7 +71,7 @@ define([
     function endGame() {
         this.gameEnded = true;
 
-        if( this.mode != 'stayingAlive') {
+        if( !isStayingAliveMode.call(this)) {
             this.timer.stop();
         }
         scoreText.destroy();
@@ -90,7 +90,7 @@ define([
     }
 
     function chooseNextAction() {
-        if( this.mode != 'stayingAlive') {
+        if( !isStayingAliveMode.call(this)) {
             this.timer.stop();
             this.timer.destroy();
         }
@@ -138,7 +138,7 @@ define([
             fireBullet.call(this, 1);
         }
 
-        if(this.mode == 'multiplayer') {
+        if(isMultiplayerMode.call(this)) {
             this.secondPlayer.resetMovement();
             if (this.aKey.isDown) {
                 this.secondPlayer.moveLeft();
@@ -180,7 +180,7 @@ define([
       .setY(16)
       .build();
 
-      if( this.mode != 'stayingAlive') {
+      if( !isStayingAliveMode.call(this)) {
           var levelText = new TextBuilder(game)
           .setText('Level: ' + this.game.levels.current)
           .middle()
@@ -198,6 +198,14 @@ define([
         balloon.setLevel(game.rnd.integerInRange(0, 3));
     }
 
+    function isMultiplayerMode() {
+        return this.mode === 'multiplayer';
+    }
+
+    function isStayingAliveMode() {
+        return this.mode === 'stayingAlive';
+    }
+
     Main.prototype = {
 
         init: function(mode) {
@@ -205,7 +213,7 @@ define([
         },
 
         create: function() {
-            if(this.mode != 'stayingAlive') {
+            if(!isStayingAliveMode.call(this)) {
                 var levels = [level1, level2, level3];
                 this.currentLevel = levels[game.levels.current - 1];
             }
@@ -215,11 +223,11 @@ define([
             this.platforms = new Platforms(game);
             this.ground = this.platforms.createGround(0, game.world.height - 64);
 
-            if(this.mode != 'stayingAlive') {
+            if(!isStayingAliveMode.call(this)) {
                 this.timeBar = this.platforms.createTimeBar(0, game.world.height - 32);
             }
 
-            if(this.mode != 'multiplayer') {
+            if(!isMultiplayerMode.call(this)) {
                 this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
             } else {
                 this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150);
@@ -228,7 +236,7 @@ define([
 
             this.balloons = new Balloons(game);
 
-            if( this.mode != 'stayingAlive' ) {
+            if( !isStayingAliveMode.call(this) ) {
                 this.balloons.createForConfig(this.currentLevel.balloons);
             } else {
                 this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
@@ -262,7 +270,7 @@ define([
             game.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR,
                 Phaser.Keyboard.ENTER, Phaser.Keyboard.A, Phaser.Keyboard.D]);
 
-            if( this.mode != 'stayingAlive') {
+            if( !isStayingAliveMode.call(this)) {
                 createTimeBar.call(this);
             }
         },
@@ -272,7 +280,7 @@ define([
             game.physics.arcade.collide(this.player, this.platforms);
             game.physics.arcade.collide(this.balloons, this.platforms);
 
-            if( this.mode == 'multiplayer') {
+            if(isMultiplayerMode.call(this)) {
                 game.physics.arcade.collide(this.secondPlayer, this.platforms);
             }
 
@@ -294,7 +302,7 @@ define([
                 this.blinkDelay = currentTime() + 250;
             }
 
-            if(this.mode == 'multiplayer') {
+            if(isMultiplayerMode.call(this)) {
                 if (this.secondPlayer.overlapWith(this.balloons)) {
                     if (currentTime() > this.collisionDelay) {
                         this.player.endLife();
@@ -316,7 +324,7 @@ define([
 
             if (!this.player.isAlive()) {
                 endGame.call(this);
-            } else if (!this.balloons.anyAlive() && this.mode != 'stayingAlive') {
+            } else if (!this.balloons.anyAlive() && !isStayingAliveMode.call(this)) {
                 chooseNextAction.call(this);
             }
 
@@ -324,7 +332,7 @@ define([
 
             game.physics.arcade.overlap(this.bullets, this.balloons, hitBalloon, null, this);
 
-            if(this.mode == 'stayingAlive' && this.randomBalloonSpawnTimer < currentTime() && !this.gameEnded) {
+            if(isStayingAliveMode.call(this) && this.randomBalloonSpawnTimer < currentTime() && !this.gameEnded) {
                 spawnBalloon.call(this);
 
                 this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
