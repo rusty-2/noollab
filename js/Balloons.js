@@ -19,7 +19,7 @@ define(["Balloon"], function(Balloon) {
         balloon.body.gravity.y = 50;
         balloon.body.velocity.x = xVelocity;
         balloon.body.velocity.y = 150;
-        balloon.body.bounce.setTo(0,0.8);
+        balloon.body.bounce.setTo(1,0.8);
         balloon.body.collideWorldBounds = true;
         return balloon;
     };
