@@ -1,5 +1,6 @@
 define([
     "Balloons",
+    "Bonuses",
     "Bullets",
     "Hearts",
     "Platforms",
@@ -8,7 +9,7 @@ define([
     "levels/level1",
     "levels/level2",
     "levels/level3"
-], function(Balloons, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
+], function(Balloons, Bonuses, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
         this.playerBulletTime = 0;
@@ -33,6 +34,12 @@ define([
             firstNewBalloon.setLevel(newLevel);
             secondNewBalloon.setLevel(newLevel);
         }
+
+        var magicBonusVariable = game.rnd.integerInRange(0, 100);
+        if(magicBonusVariable > 90) {
+            spawnBonus.call(this, balloon.xPos(), balloon.yPos());
+        }
+
         // Removes the balloon from the screen
         balloon.kill();
 
@@ -66,6 +73,27 @@ define([
         heart.reset(x, y);
 
         return heart;
+    }
+
+    function spawnBonus(x, y) {
+        var bonus = this.bonuses.create(x,y);
+
+        return bonus;
+    }
+
+    function handleBonusOverlap(player, bonus) {
+        switch (bonus.type) {
+            case 'heart':
+                if(player.lives < 3) {
+                    console.log(player.lives);
+                    player.lives++;
+                    this.heartsArray[player.lives - 1].visible = true;
+                }
+                break;
+            default:
+        }
+
+        bonus.kill();
     }
 
     function endGame() {
@@ -235,6 +263,7 @@ define([
             }
 
             this.balloons = new Balloons(game);
+            this.bonuses = new Bonuses(game);
 
             if( !isStayingAliveMode.call(this) ) {
                 this.balloons.createForConfig(this.currentLevel.balloons);
@@ -279,6 +308,7 @@ define([
             //  Collide the player and the balloons with the platforms
             game.physics.arcade.collide(this.player, this.platforms);
             game.physics.arcade.collide(this.balloons, this.platforms);
+            game.physics.arcade.collide(this.bonuses, this.platforms);
 
             if(isMultiplayerMode.call(this)) {
                 game.physics.arcade.collide(this.secondPlayer, this.platforms);
@@ -312,7 +342,7 @@ define([
                         this.secondPlayer.isBlinking = this.secondPlayer.blink();
                         this.blinkDelay = currentTime() + 250;
 
-                        this.heartsArray[this.player.lives].kill();
+                        this.heartsArray[this.player.lives].visible = false;
                     }
                 }
 
@@ -320,6 +350,12 @@ define([
                     this.secondPlayer.isBlinking = this.secondPlayer.blink();
                     this.blinkDelay = currentTime() + 250;
                 }
+            }
+
+            game.physics.arcade.overlap(this.player, this.bonuses, handleBonusOverlap, null, this);
+
+            if(isMultiplayerMode.call(this)) {
+                game.physics.arcade.overlap(this.secondPlayer, this.bonuses, handleBonusOverlap, null, this);
             }
 
             if (!this.player.isAlive()) {
