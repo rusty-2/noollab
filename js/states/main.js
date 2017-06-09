@@ -102,13 +102,13 @@ define([
 
         new TextBuilder(game)
        .setText('Final score: ' + this.score)
-       .middle()
+       .up()
        .build();
 
-        new TextBuilder(game)
-       .setText('Press \'Space\' to get back to menu screen')
-       .bottom()
-       .build();
+        var menuButton = game.add.button(game.world.width / 2 - 40, game.world.height - 300,
+        'menu_button', backToMenu.bind(this), this);
+        menuButton.width *= 0.5;
+        menuButton.height *= 0.5;
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
     }
