@@ -30,6 +30,12 @@ define([], function() {
         return this;
     };
 
+    TextBuilder.prototype.up = function () {
+      this.setX(this.game.world.width / 2 - this.text.length*6);
+      this.setY(this.game.world.height / 2 - 100);
+      return this;
+    };
+
     TextBuilder.prototype.middle = function () {
       this.setX(this.game.world.width / 2 - this.text.length*6);
       this.setY(this.game.world.height / 2 - 1);

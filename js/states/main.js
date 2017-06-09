@@ -120,16 +120,18 @@ define([
         }
         new TextBuilder(game)
        .setText('Score after level ' + this.game.levels.current + ' : ' + this.score)
-       .middle()
+       .up()
        .build();
 
-        new TextBuilder(game)
-       .setText('Press \'Space\' to go to Menu, Enter to play next level')
-       .bottom()
-       .build();
+        var nextButton = game.add.button(game.world.width / 2 + 10, game.world.height - 300,
+            'next_button', goToNextLevel.bind(this), this);
+        nextButton.width *= 0.5;
+        nextButton.height *= 0.5;
 
-        this.spaceKey.onDown.addOnce(backToMenu, this);
-        this.enterKey.onDown.addOnce(goToNextLevel, this);
+        var menuButton = game.add.button(game.world.width / 2 - 70, game.world.height - 300,
+        'menu_button', backToMenu.bind(this), this);
+        menuButton.width *= 0.5;
+        menuButton.height *= 0.5;
     }
 
     function backToMenu() {
