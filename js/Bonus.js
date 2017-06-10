@@ -9,6 +9,10 @@ define([], function() {
                 Phaser.Sprite.call(this, game, x, y, 'diamond');
                 break;
 
+            case 'bullet_2':
+                Phaser.Sprite.call(this, game, x, y, 'bullet_2');
+                break;
+
             default:
                 Phaser.Sprite.call(this, game, x, y, 'firstaid');
                 break;

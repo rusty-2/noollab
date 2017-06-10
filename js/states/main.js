@@ -12,6 +12,8 @@ define([
 ], function(Balloons, Bonuses, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
         this.score = 0;
+        this.bullet2Count = 0;
+        this.fireBullet2 = false;
     }
 
     function currentTime() {
@@ -46,7 +48,37 @@ define([
     }
 
     function fireBullet(playerNumber) {
-        if (currentTime() > this.playerBulletTime && playerNumber == 1) {
+        if( this.fireBullet2 && currentTime() > this.playerBulletTime && playerNumber == 1 ) {
+            bullet1 = this.bullets.getFirstExists(false);
+
+            if(bullet1) {
+                bullet1.reset(this.player.xPos() + 6, this.player.yPos() - 8);
+                bullet1.body.velocity.y = -300;
+                bullet1.body.velocity.x = 200;
+            }
+
+            bullet2 = this.bullets.getFirstExists(false);
+
+            if(bullet2) {
+                bullet2.reset(this.player.xPos() + 6, this.player.yPos() - 8);
+                bullet2.body.velocity.y = -300;
+                bullet2.body.velocity.x = 0;
+            }
+
+            bullet3 = this.bullets.getFirstExists(false);
+
+            if(bullet3) {
+                bullet3.reset(this.player.xPos() + 6, this.player.yPos() - 8);
+                bullet3.body.velocity.y = -300;
+                bullet3.body.velocity.x = -200;
+            }
+
+            this.bullet2Count--;
+            bullet2Text.text = 'x' + this.bullet2Count;
+
+            this.playerBulletTime = currentTime() + 250;
+
+        } else if (currentTime() > this.playerBulletTime && playerNumber == 1) {
             bullet = this.bullets.getFirstExists(false);
 
             if (bullet) {
@@ -93,7 +125,15 @@ define([
                 scoreText.text = 'Score: ' + this.score;
                 break;
 
+            case 'bullet_2':
+                this.bullet2Icon.visible = true;
+                this.bullet2Count = 3;
+                bullet2Text.text = 'x' + this.bullet2Count;
+                this.fireBullet2 = true;
+                break;
+
             default:
+                break;
         }
 
         bonus.kill();
@@ -209,6 +249,12 @@ define([
       .setY(16)
       .build();
 
+      bullet2Text = new TextBuilder(game)
+      .setText( '' )
+      .setX(game.world.width - 70)
+      .setY(44)
+      .build();
+
       if( !isStayingAliveMode.call(this)) {
           var levelText = new TextBuilder(game)
           .setText('Level: ' + this.game.levels.current)
@@ -284,8 +330,6 @@ define([
 
             this.hearts = new Hearts(game);
 
-
-
             this.heartsArray = [spawnHeart.call(this, game.world.width - 45, 5),
             spawnHeart.call(this, game.world.width - 2*45, 5),
             spawnHeart.call(this, game.world.width - 3*45, 5)];
@@ -314,6 +358,10 @@ define([
             if( !isStayingAliveMode.call(this)) {
                 createTimeBar.call(this);
             }
+
+            this.bullet2Icon = game.add.sprite(game.world.width - 37, 46, 'bullet_2');
+            this.bullet2Icon.scale.setTo(2,2);
+            this.bullet2Icon.visible = false;
         },
 
         update: function() {
@@ -384,6 +432,12 @@ define([
                 spawnBalloon.call(this);
 
                 this.randomBalloonSpawnTimer = currentTime() + game.rnd.integerInRange(5000, 7000);
+            }
+
+            if( this.fireBullet2 && this.bullet2Count == 0) {
+                bullet2Text.text = '';
+                this.bullet2Icon.visible = false;
+                this.fireBullet2 = false;
             }
         }
     };

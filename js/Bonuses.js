@@ -11,7 +11,7 @@ define(["Bonus"], function(Bonus) {
     Bonuses.prototype.constructor = Bonuses;
 
     Bonuses.prototype.create = function(x, y) {
-        var bonusType = game.rnd.integerInRange(0, 1);
+        var bonusType = game.rnd.integerInRange(0, 2);
         switch (bonusType) {
             case 0:
                 var bonus = new Bonus(this.game, x, y, 'firstaid');
@@ -21,6 +21,12 @@ define(["Bonus"], function(Bonus) {
             case 1:
                 var bonus = new Bonus(this.game, x, y, 'diamond');
                 bonus.type = 'diamond';
+                break;
+
+            case 2:
+                var bonus = new Bonus(this.game, x, y, 'bullet_2')
+                bonus.type = 'bullet_2';
+                bonus.scale.setTo(2, 2);
                 break;
 
             default:
