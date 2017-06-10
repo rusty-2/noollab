@@ -28,6 +28,10 @@ define([], function() {
     Player.prototype = Object.create(Phaser.Sprite.prototype);
     Player.prototype.constructor = Player;
 
+    Player.prototype.setLives = function(lives) {
+        this.lives = lives;
+    };
+
     Player.prototype.resetMovement = function() {
         setSpeed.call(this, 0);
     };

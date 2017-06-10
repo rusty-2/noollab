@@ -144,7 +144,7 @@ define([
         } else {
             this.game.levels.current = 1;
         }
-        this.game.state.start("Main", true, false, this.mode);
+        this.game.state.start("Main", true, false, this.mode, this.player.lives);
     }
 
     function handleKeyboardInput() {
@@ -233,7 +233,8 @@ define([
 
     Main.prototype = {
 
-        init: function(mode) {
+        init: function(mode, lives) {
+            this.lives = lives;
             this.mode = mode;
             this.gameEnded = false;
             this.score = 0;
@@ -261,6 +262,12 @@ define([
             } else {
                 this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150);
                 this.secondPlayer = new Player(this.game, game.world.width / 2 + 64, game.world.height - 150);
+                if(this.lives) {
+                    this.secondPlayer.setLives(this.lives);
+                }
+            }
+            if(this.lives) {
+                this.player.setLives(this.lives);
             }
 
             this.balloons = new Balloons(game);
@@ -277,11 +284,13 @@ define([
 
             this.hearts = new Hearts(game);
 
-            this.heartsArray = [
-                spawnHeart.call(this, game.world.width - 135, 5),
-                spawnHeart.call(this, game.world.width - 90, 5),
-                spawnHeart.call(this, game.world.width - 45, 5)
-            ];
+             
+
+            this.heartsArray = [];
+
+            for(var i = 1;i<=this.player.lives;i++) {
+                this.heartsArray[i-1] = spawnHeart.call(this, game.world.width - i*45, 5); 
+            }
 
             initText.call(this);
 
