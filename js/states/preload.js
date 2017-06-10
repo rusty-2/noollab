@@ -17,6 +17,7 @@ Preload.prototype = {
         game.load.spritesheet('next_button','assets/next_button_2.png', 87, 32);
         game.load.spritesheet('menu_button','assets/menu_button_2.png', 87, 32);
     	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
 
     },
 

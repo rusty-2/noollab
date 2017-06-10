@@ -252,10 +252,10 @@ define([
             }
 
             if(!isMultiplayerMode.call(this)) {
-                this.player = new Player(this.game, game.world.width / 2, game.world.height - 150);
+                this.player = new Player(this.game, game.world.width / 2, game.world.height - 150, 'dude');
             } else {
-                this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150);
-                this.secondPlayer = new Player(this.game, game.world.width / 2 + 64, game.world.height - 150);
+                this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150, 'dude');
+                this.secondPlayer = new Player(this.game, game.world.width / 2 + 64, game.world.height - 150, 'dude2');
             }
             if(this.lives) {
                 this.player.setLives(this.lives);

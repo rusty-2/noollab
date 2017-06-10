@@ -1,6 +1,6 @@
 define([], function() {
-    function Player(game, x, y) {
-        Phaser.Sprite.call(this, game, x, y, 'dude');
+    function Player(game, x, y, frame) {
+        Phaser.Sprite.call(this, game, x, y, frame);
         this.game = game;
         //  We need to enable physics on the player
         game.physics.arcade.enable(this);
