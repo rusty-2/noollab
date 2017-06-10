@@ -81,13 +81,18 @@ define([
 
     function handleBonusOverlap(player, bonus) {
         switch (bonus.type) {
-            case 'heart':
+            case 'firstaid':
                 if(player.lives < 3) {
-                    console.log(player.lives);
                     player.lives++;
                     this.heartsArray[player.lives - 1].visible = true;
                 }
                 break;
+
+            case 'diamond':
+                this.score += 50;
+                scoreText.text = 'Score: ' + this.score;
+                break;
+
             default:
         }
 

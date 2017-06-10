@@ -1,12 +1,16 @@
 define([], function() {
     function Bonus(game, x, y, type) {
         switch(type) {
-            case 'heart':
-                Phaser.Sprite.call(this, game, x, y, 'heart');
+            case 'firstaid':
+                Phaser.Sprite.call(this, game, x, y, 'firstaid');
+                break;
+
+            case 'diamond':
+                Phaser.Sprite.call(this, game, x, y, 'diamond');
                 break;
 
             default:
-                Phaser.Sprite.call(this, game, x, y, 'heart');
+                Phaser.Sprite.call(this, game, x, y, 'firstaid');
                 break;
         }
     };

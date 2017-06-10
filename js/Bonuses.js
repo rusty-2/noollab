@@ -11,11 +11,22 @@ define(["Bonus"], function(Bonus) {
     Bonuses.prototype.constructor = Bonuses;
 
     Bonuses.prototype.create = function(x, y) {
-        var bonusType = game.rnd.integerInRange(0, 5);
+        var bonusType = game.rnd.integerInRange(0, 1);
         switch (bonusType) {
+            case 0:
+                var bonus = new Bonus(this.game, x, y, 'firstaid');
+                bonus.type = 'firstaid';
+                break;
+
+            case 1:
+                var bonus = new Bonus(this.game, x, y, 'diamond');
+                bonus.type = 'diamond';
+                break;
+
             default:
-                var bonus = new Bonus(this.game, x, y, 'heart');
-                bonus.type = 'heart';
+                var bonus = new Bonus(this.game, x, y, 'firstaid');
+                bonus.type = 'firstaid';
+                break;
         }
 
         this.add(bonus);
