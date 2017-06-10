@@ -11,6 +11,7 @@ define([
     "levels/level3"
 ], function(Balloons, Bonuses, Bullets, Hearts, Platforms, Player, TextBuilder, level1, level2, level3) {
     function Main(game) {
+        this.score = 0;
     }
 
     function currentTime() {
@@ -129,6 +130,7 @@ define([
     }
 
     function backToMenu() {
+        this.score = 0;
         this.game.state.start("Menu");
     }
 
@@ -231,7 +233,6 @@ define([
             this.lives = lives;
             this.mode = mode;
             this.gameEnded = false;
-            this.score = 0;
             this.playerBulletTime = 0;
             this.secondPlayerBulletTime = 0;
         },
