@@ -4,7 +4,6 @@ define([], function() {
     };
 
     function start(mode) {
-
         this.game.state.start("Main", true, false, mode);
     }
 
@@ -30,9 +29,6 @@ define([], function() {
 
             var stayingAliveModeButton = game.add.button(game.world.width / 2 - 40, game.world.height - 150,
                 'staying_alive_button', start.bind(this, 'stayingAlive'), this, 1, 0, 2);
-
-            var highscoresButton = game.add.button(game.world.width / 2 - 40, game.world.height - 100,
-                'highscores_button', null, this, 1, 0, 2);
         },
 
     }

@@ -114,6 +114,8 @@ define([
     }
 
     function chooseNextAction() {
+        this.gameEnded = true;
+
         if( !isStayingAliveMode.call(this)) {
             this.timer.stop();
             this.timer.destroy();
@@ -363,9 +365,9 @@ define([
                 game.physics.arcade.overlap(this.secondPlayer, this.bonuses, handleBonusOverlap, null, this);
             }
 
-            if (!this.player.isAlive()) {
+            if (!this.player.isAlive() && !this.gameEnded) {
                 endGame.call(this);
-            } else if (!this.balloons.anyAlive() && !isStayingAliveMode.call(this)) {
+            } else if (!this.balloons.anyAlive() && !isStayingAliveMode.call(this) && !this.gameEnded) {
                 chooseNextAction.call(this);
             }
 
