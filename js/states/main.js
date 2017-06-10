@@ -68,6 +68,7 @@ define([
     function spawnHeart(x, y) {
         heart = this.hearts.getFirstExists(false);
         heart.reset(x, y);
+        heart.visible = false;
 
         return heart;
     }
@@ -278,10 +279,12 @@ define([
 
 
 
-            this.heartsArray = [];
+            this.heartsArray = [spawnHeart.call(this, game.world.width - 45, 5),
+            spawnHeart.call(this, game.world.width - 2*45, 5),
+            spawnHeart.call(this, game.world.width - 3*45, 5)];
 
-            for(var i = 1;i<=this.player.lives;i++) {
-                this.heartsArray[i-1] = spawnHeart.call(this, game.world.width - i*45, 5);
+            for(var i = 0;i<this.player.lives;i++) {
+                this.heartsArray[i].visible = true;
             }
 
             initText.call(this);
