@@ -78,6 +78,36 @@ define([
 
             this.playerBulletTime = currentTime() + 250;
 
+        } else if( this.fireBullet2 && currentTime() > this.playerBulletTime && playerNumber == 2 ) {
+            bullet1 = this.bullets.getFirstExists(false);
+
+            if(bullet1) {
+                bullet1.reset(this.secondPlayer.xPos() + 6, this.secondPlayer.yPos() - 8);
+                bullet1.body.velocity.y = -300;
+                bullet1.body.velocity.x = 200;
+            }
+
+            bullet2 = this.bullets.getFirstExists(false);
+
+            if(bullet2) {
+                bullet2.reset(this.secondPlayer.xPos() + 6, this.secondPlayer.yPos() - 8);
+                bullet2.body.velocity.y = -300;
+                bullet2.body.velocity.x = 0;
+            }
+
+            bullet3 = this.bullets.getFirstExists(false);
+
+            if(bullet3) {
+                bullet3.reset(this.secondPlayer.xPos() + 6, this.secondPlayer.yPos() - 8);
+                bullet3.body.velocity.y = -300;
+                bullet3.body.velocity.x = -200;
+            }
+
+            this.bullet2Count--;
+            bullet2Text.text = 'x' + this.bullet2Count;
+
+            this.playerBulletTime = currentTime() + 250;
+
         } else if (currentTime() > this.playerBulletTime && playerNumber == 1) {
             bullet = this.bullets.getFirstExists(false);
 
