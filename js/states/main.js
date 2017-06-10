@@ -32,7 +32,7 @@ define([
         }
 
         var magicBonusVariable = game.rnd.integerInRange(0, 100);
-        if(magicBonusVariable > 90) {
+        if(magicBonusVariable > 95) {
             spawnBonus.call(this, balloon.xPos(), balloon.yPos());
         }
 
@@ -105,10 +105,8 @@ define([
        .up()
        .build();
 
-        var menuButton = game.add.button(game.world.width / 2 - 40, game.world.height - 300,
-        'menu_button', backToMenu.bind(this), this);
-        menuButton.width *= 0.5;
-        menuButton.height *= 0.5;
+       var menuButton = game.add.button(game.world.width / 2 - 40, game.world.height - 300,
+           'menu_button', backToMenu.bind(this), this, 1, 0, 2);
 
         this.spaceKey.onDown.addOnce(backToMenu, this);
     }
@@ -123,15 +121,11 @@ define([
        .up()
        .build();
 
-        var nextButton = game.add.button(game.world.width / 2 + 10, game.world.height - 300,
-            'next_button', goToNextLevel.bind(this), this);
-        nextButton.width *= 0.5;
-        nextButton.height *= 0.5;
+       var nextButton = game.add.button(game.world.width / 2 + 10, game.world.height - 300,
+           'next_button', goToNextLevel.bind(this), this, 1, 0, 2);
 
-        var menuButton = game.add.button(game.world.width / 2 - 70, game.world.height - 300,
-        'menu_button', backToMenu.bind(this), this);
-        menuButton.width *= 0.5;
-        menuButton.height *= 0.5;
+        var menuButton = game.add.button(game.world.width / 2 - 80, game.world.height - 300,
+            'menu_button', backToMenu.bind(this), this, 1, 0, 2);
     }
 
     function backToMenu() {
@@ -284,12 +278,12 @@ define([
 
             this.hearts = new Hearts(game);
 
-             
+
 
             this.heartsArray = [];
 
             for(var i = 1;i<=this.player.lives;i++) {
-                this.heartsArray[i-1] = spawnHeart.call(this, game.world.width - i*45, 5); 
+                this.heartsArray[i-1] = spawnHeart.call(this, game.world.width - i*45, 5);
             }
 
             initText.call(this);
