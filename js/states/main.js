@@ -256,9 +256,6 @@ define([
             } else {
                 this.player = new Player(this.game, game.world.width / 2 - 64, game.world.height - 150);
                 this.secondPlayer = new Player(this.game, game.world.width / 2 + 64, game.world.height - 150);
-                if(this.lives) {
-                    this.secondPlayer.setLives(this.lives);
-                }
             }
             if(this.lives) {
                 this.player.setLives(this.lives);
